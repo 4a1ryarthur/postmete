@@ -1,37 +1,36 @@
 import sys
-from PyQt5.QtCore import QUrl
-from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
-from PyQt5.QtWidgets import QApplication, QLineEdit, QPushButton, QVBoxLayout, QWidget
-
-class Browser(QWidget):
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Web Browser')
+        self.setWindowTitle("Python Web Browser")
         self.setGeometry(100, 100, 800, 600)
-        self.url_field = QLineEdit(self)
-        self.go_button = QPushButton('Go', self)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.url_field)
-        layout.addWidget(self.go_button)
+        # Create a widget to hold the web view
+        widget = QWidget()
+        self.setCentralWidget(widget)
 
-        self.web = QWebEngineView()
-        self.web.setGeometry(0, 50, 800, 550)
+        # Create a vertical layout
+        layout = QVBoxLayout(widget)
 
-        self.go_button.clicked.connect(self.navigate)
+        # Create a web view
+        self.webView = QWebEngineView()
+        layout.addWidget(self.webView)
 
-        layout.addWidget(self.web)
-        self.setLayout(layout)
+        # Load an initial webpage
+        self.webView.load(QUrl("https://www.4a1ryarthur.github.io/postmete/welcome.html"))
 
-    def navigate(self):
-        url = QUrl(self.url_field.text())
-        self.web.setUrl(url)
+        # Set the layout for the widget
+        widget.setLayout(layout)
+        def main():
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    browser = Browser()
-    browser.show()
-    sys.exit(app.exec_())
+    main()
