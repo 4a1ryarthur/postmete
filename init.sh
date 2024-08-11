@@ -1,7 +1,8 @@
-# This Will Be Installed in Your First 
-# Download.
-luarocks install luasocket
-luarocks install lxsh
+#!/bin/bash
 
-# TODO: Install Lua Compiler
-# Delete This File if It's Already Installed 
+# Install PyQt5
+sudo apt-get update
+sudo apt-get install -y python3-pyqt5
+
+# Delete the installer script file
+rm "$0"
