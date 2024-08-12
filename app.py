@@ -1,36 +1,45 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
-from PyQt5.QtWebEngineWidgets import QWebEngineView
-class MainWindow(QMainWindow):
+import tkinter as tk
+from tkinter import ttk
+import requests
+from html.parser import HTMLParser
+
+class Browser(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.initUI()
+        self.title("Simple Browser")
+        self.geometry("800x600")
 
-    def initUI(self):
-        self.setWindowTitle("Python Web Browser")
-        self.setGeometry(100, 100, 800, 600)
+        # Create a frame for the address bar
+        self.address_bar_frame = tk.Frame(self)
+        self.address_bar_frame.pack(fill="x")
 
-        # Create a widget to hold the web view
-        widget = QWidget()
-        self.setCentralWidget(widget)
+        # Create an entry field for the URL
+        self.url_entry = tk.Entry(self.address_bar_frame, width=50)
+        self.url_entry.pack(side="left", fill="x", expand=True)
 
-        # Create a vertical layout
-        layout = QVBoxLayout(widget)
+        # Create a button to navigate to the URL
+        self.go_button = tk.Button(self.address_bar_frame, text="Go", command=self.navigate)
+        self.go_button.pack(side="left")
 
-        # Create a web view
-        self.webView = QWebEngineView()
-        layout.addWidget(self.webView)
+        # Create a frame for the web page
+        self.web_page_frame = tk.Frame(self)
+        self.web_page_frame.pack(fill="both", expand=True)
 
-        # Load an initial webpage
-        self.webView.load(QUrl("https://www.4a1ryarthur.github.io/postmete/welcome.html"))
+        # Create a text widget to display the web page
+        self.web_page_text = tk.Text(self.web_page_frame)
+        self.web_page_text.pack(fill="both", expand=True)
 
-        # Set the layout for the widget
-        widget.setLayout(layout)
-        def main():
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+    def navigate(self):
+        url = self.url_entry.get()
+        if not url.startswith("http://") and not url.startswith("https://"):
+            url = "http://" + url
+        response = requests.get(url)
+        self.display_web_page(response.text)
 
-if __name__ == '__main__':
-    main()
+    def display_web_page(self, html):
+        self.web_page_text.delete(1.0, "end")
+        self.web_page_text.insert("end", html)
+
+if __name__ == "__main__":
+    browser = Browser()
+    browser.mainloop()
